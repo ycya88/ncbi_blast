@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -xeuo pipefail
 
 DOCKERHUB_USERNAME=${1:-"ncbi"}

@@ -1,16 +1,16 @@
 ---
-name: Build and push docker image for blast in ubuntu release mode
+name: Build and push docker image for blast in alpine root mode
 
 on:
   push:
     branches:
       - main
     paths:
-        - 'ubuntu-blast-release/**'
+        - 'alpine-root/**'
   workflow_dispatch:
 
 jobs:
-  docker-build-blast-ubuntu:
+  docker-build-blast-alpine:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,10 +32,10 @@ jobs:
       - name: Extract version from Dockerfile
         id: extract_version
         run: |
-          cd ubuntu-blast-release
-          UBUNTU_VERSION=$(grep -oP '^ARG UBUNTU_VERSION=\K.*' Dockerfile)
-          echo "UBUNTU_VERSION=${UBUNTU_VERSION}" >> $GITHUB_ENV
-          echo "UBUNTU_VERSION=${UBUNTU_VERSION}"
+          cd alpine-root
+          ALPINE_VERSION=$(grep -oP '^ARG ALPINE_VERSION=\K.*' Dockerfile)
+          echo "ALPINE_VERSION=${ALPINE_VERSION}" >> $GITHUB_ENV
+          echo "ALPINE_VERSION=${ALPINE_VERSION}"
           BLAST_VERSION=$(grep -oP '^ARG BLAST_VERSION=\K.*' Dockerfile)
           echo "BLAST_VERSION=${BLAST_VERSION}" >> $GITHUB_ENV
           echo "BLAST_VERSION=${BLAST_VERSION}"
@@ -43,13 +43,14 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: ubuntu-blast-release
-          file: ubuntu-blast-release/Dockerfile
+          context: alpine-root
+          file: alpine-root/Dockerfile
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
           push: true
           tags: |
-            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-ubuntu${{ env.UBUNTU_VERSION }}-release
-            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-release
-            ycya88/ncbi_blast:ubuntu${{ env.UBUNTU_VERSION }}-release
+            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-alpine${{ env.ALPINE_VERSION }}-root
+            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-root
+            ycya88/ncbi_blast:alpine${{ env.ALPINE_VERSION }}-root
+            ycya88/ncbi_blast:alpine-root
