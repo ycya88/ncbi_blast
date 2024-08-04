@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=ycya88/ncbi_edirect
-ARG EDIRECT_VERSION=22.4.20240802-alpine3.20-root
-
-FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
+ARG EDIRECT_VERSION=22.4.20240802-alpine3.20
 
 # renovate: datasource=docker depName=alpine
 ARG ALPINE_VERSION=3.20.2
+
+FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
 
 FROM alpine:${ALPINE_VERSION} AS base
 

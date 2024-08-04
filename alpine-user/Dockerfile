@@ -3,10 +3,10 @@
 # renovate: datasource=docker depName=ycya88/ncbi_edirect
 ARG EDIRECT_VERSION=22.4.20240802-alpine3.20-root
 
-FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
-
 # renovate: datasource=docker depName=alpine
 ARG ALPINE_VERSION=3.20.2
+
+FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
 
 FROM alpine:${ALPINE_VERSION} AS base
 
@@ -29,6 +29,9 @@ RUN cpanm --notest HTML::Entities
 RUN rm -fr /home/${username}/.cpanm
 
 FROM base AS build
+
+# renovate: datasource=docker depName=ycya88/ncbi_blast
+ARG BLAST_VERSION=2.16.0
 
 ARG VDB_VERSION=3.1.1
 ARG CLOUD_SDK_VERSION=472.0.0
