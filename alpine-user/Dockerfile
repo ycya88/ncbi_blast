@@ -127,4 +127,4 @@ ENV PATH="/home/${username}/edirect:${PATH}"
 
 WORKDIR /blast
 
-USER root
+USER ${username}

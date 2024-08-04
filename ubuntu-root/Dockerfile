@@ -1,14 +1,14 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=ycya88/ncbi_edirect
-ARG EDIRECT_VERSION=22.4.20240802-alpine3.20-root
+ARG EDIRECT_VERSION=22.4.20240802-ubuntu3.20-root
 
-# renovate: datasource=docker depName=alpine
-ARG ALPINE_VERSION=3.20.2
+# renovate: datasource=docker depName=ubuntu
+ARG UBUNTU_VERSION=3.20.2
 
 FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
 
-FROM alpine:${ALPINE_VERSION} AS base
+FROM ubuntu:${UBUNTU_VERSION} AS base
 
 LABEL \
     org.opencontainers.image.description="NCBI BLAST+ tool" \
@@ -17,16 +17,12 @@ LABEL \
     org.opencontainers.image.vendor="NCBI/NLM/NIH" \
     org.opencontainers.image.source="https://github.com/ycya88/ncbi_edirect" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.os="alpine"
+    org.opencontainers.image.os="ubuntu"
 
-RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
-
-RUN apk add --no-cache build-base curl libidn perl perl-doc perl-app-cpanminus perl-dev perl-xml-simple perl-libwww perl-net-mpd \
-    lmdb-dev wget sqlite-dev cmake gmp libxml2 json-c parallel vmtouch py3-pip py3-openssl coreutils bash
-
-RUN cpanm --notest HTML::Entities
-
-RUN rm -fr /root/.cpanm
+RUN apt-get -y -m update && apt-get install -y build-essential curl libidn12 libnet-perl perl-doc liblmdb-dev wget libsqlite3-dev cmake \
+    libgomp1 libxml-simple-perl libjson-perl parallel vmtouch cpanminus python3 python3-openssl \
+    && rm -fr /var/lib/apt/lists/* \
+    && cpanm HTML::Entities && rm -fr .cpanm
 
 FROM base AS build
 
@@ -63,11 +59,11 @@ ENV BLASTDB /blast/blastdb:/blast/blastdb_custom
 ENV BLAST_DOCKER true
 ENV PATH="/root/edirect:/blast/bin:${PATH}"
 
-# RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
-#     && cp /blast/bin/blastn /blast/bin/blastn.REAL \
-#     && cp /blast/bin/blastx /blast/bin/blastx.REAL \
-#     && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
-#     && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
+RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
+    && cp /blast/bin/blastn /blast/bin/blastn.REAL \
+    && cp /blast/bin/blastx /blast/bin/blastx.REAL \
+    && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
+    && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
 
 COPY blastn.sh /blast/bin/blastn
 COPY blastp.sh /blast/bin/blastp

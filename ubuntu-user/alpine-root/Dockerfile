@@ -63,11 +63,11 @@ ENV BLASTDB /blast/blastdb:/blast/blastdb_custom
 ENV BLAST_DOCKER true
 ENV PATH="/root/edirect:/blast/bin:${PATH}"
 
-# RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
-#     && cp /blast/bin/blastn /blast/bin/blastn.REAL \
-#     && cp /blast/bin/blastx /blast/bin/blastx.REAL \
-#     && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
-#     && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
+RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
+    && cp /blast/bin/blastn /blast/bin/blastn.REAL \
+    && cp /blast/bin/blastx /blast/bin/blastx.REAL \
+    && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
+    && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
 
 COPY blastn.sh /blast/bin/blastn
 COPY blastp.sh /blast/bin/blastp
