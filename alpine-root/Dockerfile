@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=ycya88/ncbi_edirect
-ARG EDIRECT_VERSION=22.4.20240802-alpine3.20
+ARG EDIRECT_VERSION=22.4.20240802-alpine3.20-root
 
 # renovate: datasource=docker depName=alpine
 ARG ALPINE_VERSION=3.20.2
