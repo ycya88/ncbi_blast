@@ -38,6 +38,8 @@ ARG CLOUD_SDK_VERSION=472.0.0
 
 WORKDIR /root
 
+RUN mkdir -p /blast/bin /blast/lib
+
 RUN wget -q https://github.com/ncbi/ncbi-vdb/archive/refs/tags/${VDB_VERSION}.tar.gz \
     && tar xfz ${VDB_VERSION}.tar.gz \
     && rm ${VDB_VERSION}.tar.gz \
@@ -52,8 +54,6 @@ RUN mkdir -p ${VDB}/linux/release/x86_64/lib \
     && cp -R /root/vdb/lib64/* /blast/lib/ \
     && mkdir -p ${VDB}/interfaces \
     && cp -R /root/vdb/include/* ${VDB}/interfaces
-
-RUN mkdir -p /blast/bin /blast/lib
 
 ## COPY BLAST
 

@@ -42,6 +42,8 @@ RUN addgroup -S ${grpname} \
 
 WORKDIR /home/${username}
 
+RUN mkdir -p /blast/bin /blast/lib
+
 RUN wget -q https://github.com/ncbi/ncbi-vdb/archive/refs/tags/${VDB_VERSION}.tar.gz \
     && tar xfz ${VDB_VERSION}.tar.gz \
     && rm ${VDB_VERSION}.tar.gz \
@@ -57,8 +59,6 @@ RUN mkdir -p ${VDB}/linux/release/x86_64/lib \
     && mkdir -p ${VDB}/interfaces \
     && cp -R /home/${username}/vdb/include/* ${VDB}/interfaces
 
-RUN mkdir -p /blast/bin /blast/lib
-
 ## COPY BLAST
 
 RUN mkdir -p /blast/blastdb /blast/blastdb_custom
@@ -67,11 +67,11 @@ ENV BLASTDB /blast/blastdb:/blast/blastdb_custom
 ENV BLAST_DOCKER true
 ENV PATH="/home/${username}/edirect:/blast/bin:${PATH}"
 
-RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
-    && cp /blast/bin/blastn /blast/bin/blastn.REAL \
-    && cp /blast/bin/blastx /blast/bin/blastx.REAL \
-    && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
-    && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
+# RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
+#     && cp /blast/bin/blastn /blast/bin/blastn.REAL \
+#     && cp /blast/bin/blastx /blast/bin/blastx.REAL \
+#     && cp /blast/bin/tblastn /blast/bin/tblastn.REAL \
+#     && cp /blast/bin/tblastx /blast/bin/tblastx.REAL
 
 COPY blastn.sh /blast/bin/blastn
 COPY blastp.sh /blast/bin/blastp
