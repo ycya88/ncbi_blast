@@ -1,0 +1,55 @@
+---
+name: Build and push docker image for blast in ubuntu release mode
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+        - 'ubuntu-blast-release/**'
+  workflow_dispatch:
+
+jobs:
+  docker-build-blast-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          username: ycya88
+          password: ${{ secrets.DOCKER_SECRET }}
+
+      - name: Extract version from Dockerfile
+        id: extract_version
+        run: |
+          cd ubuntu-blast-release
+          UBUNTU_VERSION=$(grep -oP '^ARG UBUNTU_VERSION=\K.*' Dockerfile)
+          echo "UBUNTU_VERSION=${UBUNTU_VERSION}" >> $GITHUB_ENV
+          echo "UBUNTU_VERSION=${UBUNTU_VERSION}"
+          BLAST_VERSION=$(grep -oP '^ARG BLAST_VERSION=\K.*' Dockerfile)
+          echo "BLAST_VERSION=${BLAST_VERSION}" >> $GITHUB_ENV
+          echo "BLAST_VERSION=${BLAST_VERSION}"
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: ubuntu-blast-release
+          file: ubuntu-blast-release/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          push: true
+          tags: |
+            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-ubuntu${{ env.UBUNTU_VERSION }}-release
+            ycya88/ncbi_blast:${{ env.BLAST_VERSION }}-release
+            ycya88/ncbi_blast:ubuntu${{ env.UBUNTU_VERSION }}-release
