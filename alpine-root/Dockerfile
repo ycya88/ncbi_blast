@@ -38,8 +38,9 @@ ARG CLOUD_SDK_VERSION=472.0.0
 
 WORKDIR /root
 
-RUN mkdir -p /blast/bin /blast/lib
-
+RUN mkdir -p /blast/bin /blast/lib \
+    && mkdir -p /etc/environment
+    
 RUN wget -q https://github.com/ncbi/ncbi-vdb/archive/refs/tags/${VDB_VERSION}.tar.gz \
     && tar xfz ${VDB_VERSION}.tar.gz \
     && rm ${VDB_VERSION}.tar.gz \
@@ -57,11 +58,11 @@ RUN mkdir -p ${VDB}/linux/release/x86_64/lib \
 
 ## COPY BLAST
 
-RUN mkdir -p /blast/blastdb /blast/blastdb_custom
-RUN sed -i '$ a BLASTDB=/blast/blastdb:/blast/blastdb_custom' /etc/environment
-ENV BLASTDB /blast/blastdb:/blast/blastdb_custom
-ENV BLAST_DOCKER true
-ENV PATH="/root/edirect:/blast/bin:${PATH}"
+# RUN mkdir -p /blast/blastdb /blast/blastdb_custom
+# RUN sed -i '$ a BLASTDB=/blast/blastdb:/blast/blastdb_custom' /etc/environment
+# ENV BLASTDB /blast/blastdb:/blast/blastdb_custom
+# ENV BLAST_DOCKER true
+# ENV PATH="/root/edirect:/blast/bin:${PATH}"
 
 # RUN cp /blast/bin/blastp /blast/bin/blastp.REAL \
 #     && cp /blast/bin/blastn /blast/bin/blastn.REAL \
