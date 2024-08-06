@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # renovate: datasource=docker depName=ubuntu
-ARG UBUNTU_VERSION=22.04
+ARG UBUNTU_VERSION=22.10
 
 FROM ubuntu:${UBUNTU_VERSION} AS blast
 
