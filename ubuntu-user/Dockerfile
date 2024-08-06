@@ -4,7 +4,7 @@
 ARG EDIRECT_VERSION=22.4.20240802-ubuntu3.20
 
 # renovate: datasource=docker depName=ubuntu
-ARG UBUNTU_VERSION=3.20.2
+ARG UBUNTU_VERSION=14.04.5
 
 FROM ycya88/ncbi_edirect:${EDIRECT_VERSION} as edirect
 
